@@ -76,9 +76,27 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let newLocation = locations.last {
              print("didUpdateLocations \(newLocation)")
-            location = newLocation
-            lastLocationError = nil
-            updateLabels()
+
+            if newLocation.timestamp.timeIntervalSinceNow < -5 {
+                return
+            }
+
+            if newLocation.horizontalAccuracy < 0 {
+                return
+            }
+
+            //guard let currentHorizontalAccuracy = location.horizontalAccuracy else { return }
+
+            if location == nil ||  location!.horizontalAccuracy > newLocation.horizontalAccuracy {
+                location = newLocation
+                lastLocationError = nil
+
+                if newLocation.horizontalAccuracy <= locationManager.desiredAccuracy {
+                    print("*** We're done!")
+                    stopLocationManager()
+                }
+                updateLabels()
+            }
         }
     }
     
@@ -103,7 +121,14 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
             showLocationServicesDeniedAlert()
             return
         }
-        startLocationManager()
+        if updatingLocation {
+            stopLocationManager()
+        } else {
+            location = nil
+            lastLocationError = nil
+            startLocationManager()
+        }
+
         updateLabels()
     }
     
@@ -135,6 +160,14 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     
     
     // MARK: - UI methods
+
+    func configureGetButton() {
+        if updatingLocation {
+            getMyLocationButton.setTitle("Stop", for: .normal)
+        } else {
+            getMyLocationButton.setTitle("Get My Location", for: .normal)
+        }
+    }
     
     func updateLabels() {
         if let location = location {
@@ -164,6 +197,7 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
             }
             messageLabel.text = statusMessage
         }
+        configureGetButton()
     }
     
     private func setupUI() {
