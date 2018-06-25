@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5685F63920DE15F900A972A7 /* LocationDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5685F63820DE15F900A972A7 /* LocationDetailsViewController.swift */; };
+		5685F63B20E0A14B00A972A7 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5685F63A20E0A14B00A972A7 /* Extensions.swift */; };
 		AC74DAD620D97EDB0086B2A2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC74DAD520D97EDB0086B2A2 /* AppDelegate.swift */; };
 		AC74DAD820D97EDB0086B2A2 /* CurrentLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC74DAD720D97EDB0086B2A2 /* CurrentLocationViewController.swift */; };
 		AC74DADB20D97EDB0086B2A2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC74DAD920D97EDB0086B2A2 /* Main.storyboard */; };
@@ -17,6 +19,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5685F63820DE15F900A972A7 /* LocationDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetailsViewController.swift; sourceTree = "<group>"; };
+		5685F63A20E0A14B00A972A7 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		AC74DAD220D97EDB0086B2A2 /* MyLocations.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyLocations.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC74DAD520D97EDB0086B2A2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AC74DAD720D97EDB0086B2A2 /* CurrentLocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentLocationViewController.swift; sourceTree = "<group>"; };
@@ -59,8 +63,10 @@
 			isa = PBXGroup;
 			children = (
 				AC74DAD520D97EDB0086B2A2 /* AppDelegate.swift */,
-				AC74DAE720D981690086B2A2 /* MainTabBarController.swift */,
+				5685F63A20E0A14B00A972A7 /* Extensions.swift */,
 				AC74DAD720D97EDB0086B2A2 /* CurrentLocationViewController.swift */,
+				5685F63820DE15F900A972A7 /* LocationDetailsViewController.swift */,
+				AC74DAE720D981690086B2A2 /* MainTabBarController.swift */,
 				AC74DAE920D9896F0086B2A2 /* SplitLabelView.swift */,
 				AC74DAD920D97EDB0086B2A2 /* Main.storyboard */,
 				AC74DADC20D97EDD0086B2A2 /* Assets.xcassets */,
@@ -142,9 +148,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				AC74DAD820D97EDB0086B2A2 /* CurrentLocationViewController.swift in Sources */,
+				5685F63B20E0A14B00A972A7 /* Extensions.swift in Sources */,
 				AC74DAD620D97EDB0086B2A2 /* AppDelegate.swift in Sources */,
 				AC74DAEA20D9896F0086B2A2 /* SplitLabelView.swift in Sources */,
 				AC74DAE820D981690086B2A2 /* MainTabBarController.swift in Sources */,
+				5685F63920DE15F900A972A7 /* LocationDetailsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -56,7 +56,6 @@ class CurrentLocationViewController: UIViewController {
     lazy var getMyLocationButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Get My Location", for: .normal)
-        button.addTarget(self, action: #selector(getLocation), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -79,8 +78,26 @@ class CurrentLocationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        getMyLocationButton.addTarget(self, action: #selector(getLocation), for: .touchUpInside)
+        tagButton.addTarget(self, action: #selector(showTagLocation), for: .touchUpInside)
         setupUI()
         updateLabels()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.isNavigationBarHidden = true
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.isNavigationBarHidden = false
+    }
+
+    @objc func showTagLocation() {
+        let locationDetailsController = LocationDetailsViewController(style: .grouped)
+        locationDetailsController.placemark = placemark
+        locationDetailsController.coordinate = location!.coordinate
+        navigationController?.pushViewController(locationDetailsController, animated: true)
+
     }
 
     // MARK: - UI methods
@@ -93,26 +110,7 @@ class CurrentLocationViewController: UIViewController {
         }
     }
 
-    func string(from placemark: CLPlacemark) -> String {
-        var line1 = ""
-        if let lotNumber = placemark.subThoroughfare {
-            line1 += lotNumber + " "
-        }
-        if let streetName = placemark.thoroughfare {
-            line1 += streetName + " "
-        }
-        var line2 = ""
-        if let city = placemark.locality {
-            line2 += city + " "
-        }
-        if let state = placemark.administrativeArea {
-            line2 += state + " "
-        }
-        if let zipCode = placemark.postalCode {
-            line2 += zipCode + " "
-        }
-        return line1 + "\n" + line2
-    }
+    
     
     func updateLabels() {
         if let location = location {
@@ -168,7 +166,7 @@ class CurrentLocationViewController: UIViewController {
         view.addSubview(entireStackView)
         entireStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40).isActive = true
         entireStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -25).isActive = true
-        entireStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 25).isActive = true 
+        entireStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 25).isActive = true
         view.addSubview(getMyLocationButton)
         getMyLocationButton.topAnchor.constraint(equalTo: entireStackView.bottomAnchor).isActive = true
         getMyLocationButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -35).isActive = true
