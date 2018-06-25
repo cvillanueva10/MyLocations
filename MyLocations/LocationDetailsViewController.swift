@@ -61,12 +61,13 @@ class LocationDetailsViewController: UITableViewController {
     let addressViewCell = UITableViewCell()
     var coordinate = CLLocationCoordinate2DMake(0, 0)
     var placemark: CLPlacemark?
+    var categoryName = "No Category"
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         descriptionTextView.text = ""
-        categoryLabelText = ""
+        categoryLabelText = categoryName
         latitudeText = String(format: "%.8f", coordinate.latitude)
         longitudeText = String(format: "%.8f", coordinate.longitude)
         if let placemark = placemark {
@@ -93,18 +94,11 @@ class LocationDetailsViewController: UITableViewController {
         navigationItem.title = "Tag Location"
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(handleDone))
-
-//        let textViewInset = UIEdgeInsetsMake(10, 16, 10, 16)
-//        descriptionTextView.frame = descriptionViewCell.frame
-//        descriptionTextView.frame = UIEdgeInsetsInsetRect(descriptionTextView.frame, textViewInset)
-//        descriptionViewCell.addSubview(descriptionTextView)
-
         descriptionViewCell.addSubview(descriptionTextView)
         descriptionTextView.leftAnchor.constraint(equalTo: descriptionViewCell.readableContentGuide.leftAnchor).isActive = true
         descriptionTextView.rightAnchor.constraint(equalTo: descriptionViewCell.readableContentGuide.rightAnchor).isActive = true
         descriptionTextView.topAnchor.constraint(equalTo: descriptionViewCell.topAnchor, constant: 10).isActive = true
         descriptionTextView.bottomAnchor.constraint(equalTo: descriptionViewCell.bottomAnchor, constant: -10).isActive = true
-
         addPhotoViewCell.addSubview(addPhotoLabel)
         addPhotoLabel.leftAnchor.constraint(equalTo: addPhotoViewCell.readableContentGuide.leftAnchor).isActive = true
         addPhotoLabel.widthAnchor.constraint(equalTo: addPhotoViewCell.widthAnchor, multiplier: 0.75).isActive = true
@@ -157,6 +151,14 @@ class LocationDetailsViewController: UITableViewController {
             return addressDetailLabel.frame.size.height + 20
         } else {
             return 44
+        }
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 0 && indexPath.row == 1 {
+            let categoryPickerViewController = CategoryPickerViewController()
+            categoryPickerViewController.selectedCategoryName = categoryName
+            navigationController?.pushViewController(categoryPickerViewController, animated: true)
         }
     }
 
