@@ -22,8 +22,6 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         let currentLocationViewController = CurrentLocationViewController()
         currentLocationViewController.tabBarItem.title = "Tag"
         viewControllers = [currentLocationViewController]
-        
-        
     }
 
   

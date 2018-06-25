@@ -66,6 +66,7 @@
 			children = (
 				AC74DAD520D97EDB0086B2A2 /* AppDelegate.swift */,
 				5685F63A20E0A14B00A972A7 /* Extensions.swift */,
+				5685F63C20E1753900A972A7 /* CategoryPickerViewController.swift */,
 				AC74DAD720D97EDB0086B2A2 /* CurrentLocationViewController.swift */,
 				5685F63820DE15F900A972A7 /* LocationDetailsViewController.swift */,
 				AC74DAE720D981690086B2A2 /* MainTabBarController.swift */,
@@ -74,7 +75,6 @@
 				AC74DADC20D97EDD0086B2A2 /* Assets.xcassets */,
 				AC74DADE20D97EDD0086B2A2 /* LaunchScreen.storyboard */,
 				AC74DAE120D97EDD0086B2A2 /* Info.plist */,
-				5685F63C20E1753900A972A7 /* CategoryPickerViewController.swift */,
 			);
 			path = MyLocations;
 			sourceTree = "<group>";

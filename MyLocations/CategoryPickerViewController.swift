@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol CategoryPickerViewControllerDelegate: class {
+    func didSetCategoryName(with categoryName: String)
+}
+
 class CategoryPickerViewController: UITableViewController {
     let categories = [
         "No Category",
@@ -24,11 +28,11 @@ class CategoryPickerViewController: UITableViewController {
     ]
     var selectedCategoryName = ""
     var selectedIndexPath = IndexPath()
+    weak var delegate: CategoryPickerViewControllerDelegate?
     private let cellID = "cellID"
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         for i in 0..<categories.count {
             if categories[i] == selectedCategoryName {
                 selectedIndexPath = IndexPath(row: i, section: 0)
@@ -53,6 +57,10 @@ class CategoryPickerViewController: UITableViewController {
         }
         return cell
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        delegate?.didSetCategoryName(with: selectedCategoryName)
+    }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row != selectedIndexPath.row {
@@ -63,6 +71,7 @@ class CategoryPickerViewController: UITableViewController {
                 oldCell.accessoryType = .none
             }
             selectedIndexPath = indexPath
+            selectedCategoryName = categories[indexPath.row]
         }
     }
 

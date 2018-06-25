@@ -64,15 +64,13 @@ class CurrentLocationViewController: UIViewController {
     var location: CLLocation?
     var updatingLocation = false
     var lastLocationError: Error?
-    
     let geocoder = CLGeocoder()
     var placemark: CLPlacemark?
     var performingReverseGeocoding = false
     var lastGeocodingError: Error?
-
     var timer: Timer?
-
     var distance = CLLocationDistance(Double.greatestFiniteMagnitude)
+   
     
     // MARK: - lifecycle
     
@@ -97,7 +95,6 @@ class CurrentLocationViewController: UIViewController {
         locationDetailsController.placemark = placemark
         locationDetailsController.coordinate = location!.coordinate
         navigationController?.pushViewController(locationDetailsController, animated: true)
-
     }
 
     // MARK: - UI methods
@@ -109,8 +106,6 @@ class CurrentLocationViewController: UIViewController {
             getMyLocationButton.setTitle("Get My Location", for: .normal)
         }
     }
-
-    
     
     func updateLabels() {
         if let location = location {

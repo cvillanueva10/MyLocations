@@ -25,7 +25,7 @@ class LocationDetailsViewController: UITableViewController {
         return textView
     }()
 
-    var categoryLabelText: String?
+    var categoryLabelText: String = "No Category"
     var latitudeText: String?
     var longitudeText: String?
     var dateText: String?
@@ -61,13 +61,11 @@ class LocationDetailsViewController: UITableViewController {
     let addressViewCell = UITableViewCell()
     var coordinate = CLLocationCoordinate2DMake(0, 0)
     var placemark: CLPlacemark?
-    var categoryName = "No Category"
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         descriptionTextView.text = ""
-        categoryLabelText = categoryName
         latitudeText = String(format: "%.8f", coordinate.latitude)
         longitudeText = String(format: "%.8f", coordinate.longitude)
         if let placemark = placemark {
@@ -76,10 +74,22 @@ class LocationDetailsViewController: UITableViewController {
             addressDetailLabel.text = "No Address Found"
         }
         dateText = format(date: Date())
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        gestureRecognizer.cancelsTouchesInView = false
+        tableView.addGestureRecognizer(gestureRecognizer)
     }
 
     private func format(date: Date) -> String {
         return dateFormatter.string(from: date)
+    }
+    
+    @objc func hideKeyboard(_ gestureRecognizer: UIGestureRecognizer) {
+        let point = gestureRecognizer.location(in: tableView)
+        let indexPath = tableView.indexPathForRow(at: point)
+        if indexPath != nil && indexPath!.row == 0 && indexPath!.row == 0 {
+            return
+        }
+        descriptionTextView.resignFirstResponder()
     }
 
     @objc func handleDone() {
@@ -153,13 +163,24 @@ class LocationDetailsViewController: UITableViewController {
             return 44
         }
     }
+    
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        if indexPath.section == 0 || indexPath.section == 1 {
+            return indexPath
+        } else {
+            return nil
+        }
+    }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 0 && indexPath.row == 1 {
+        if indexPath.section == 0 && indexPath.row == 0 {
+            descriptionTextView.becomeFirstResponder()
+        } else if indexPath.section == 0 && indexPath.row == 1 {
             let categoryPickerViewController = CategoryPickerViewController()
-            categoryPickerViewController.selectedCategoryName = categoryName
+            categoryPickerViewController.selectedCategoryName = categoryLabelText
+            categoryPickerViewController.delegate = self
             navigationController?.pushViewController(categoryPickerViewController, animated: true)
-        }
+        } 
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -198,3 +219,15 @@ class LocationDetailsViewController: UITableViewController {
         return cell
     }
 }
+
+extension LocationDetailsViewController: CategoryPickerViewControllerDelegate {
+    func didSetCategoryName(with categoryName: String) {
+        categoryLabelText = categoryName
+        tableView.reloadData()
+    }
+    
+}
+
+
+
+
