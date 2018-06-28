@@ -32,3 +32,12 @@ extension UIViewController {
         return line1 + "\n" + line2
     }
 }
+
+extension UIViewController {
+
+    func afterDelay(_ seconds: Double, run: @escaping () -> Void) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + seconds, execute: run)
+    }
+
+
+}
