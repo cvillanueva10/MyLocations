@@ -1,6 +1,7 @@
 
 import UIKit
 import CoreLocation
+import CoreData
 
 class CurrentLocationViewController: UIViewController {
     
@@ -70,7 +71,7 @@ class CurrentLocationViewController: UIViewController {
     var lastGeocodingError: Error?
     var timer: Timer?
     var distance = CLLocationDistance(Double.greatestFiniteMagnitude)
-   
+    var managedObjectContext: NSManagedObjectContext!
     
     // MARK: - lifecycle
     
@@ -94,6 +95,7 @@ class CurrentLocationViewController: UIViewController {
         let locationDetailsController = LocationDetailsViewController(style: .grouped)
         locationDetailsController.placemark = placemark
         locationDetailsController.coordinate = location!.coordinate
+        locationDetailsController.managedObjectContext = managedObjectContext
         navigationController?.pushViewController(locationDetailsController, animated: true)
     }
 

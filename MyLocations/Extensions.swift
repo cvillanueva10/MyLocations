@@ -9,6 +9,11 @@
 import UIKit
 import CoreLocation
 
+let applicationDocumentsDirectory: URL = {
+    let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+    return paths[0]
+}()
+
 extension UIViewController {
 
     func string(from placemark: CLPlacemark) -> String {
