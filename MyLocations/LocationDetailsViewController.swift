@@ -62,6 +62,7 @@ class LocationDetailsViewController: UITableViewController {
     let addressViewCell = UITableViewCell()
     var coordinate = CLLocationCoordinate2DMake(0, 0)
     var placemark: CLPlacemark?
+    var date = Date()
 
     var managedObjectContext: NSManagedObjectContext!
 
@@ -76,7 +77,7 @@ class LocationDetailsViewController: UITableViewController {
         } else {
             addressDetailLabel.text = "No Address Found"
         }
-        dateText = format(date: Date())
+        dateText = format(date: date)
         let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         gestureRecognizer.cancelsTouchesInView = false
         tableView.addGestureRecognizer(gestureRecognizer)
@@ -98,11 +99,23 @@ class LocationDetailsViewController: UITableViewController {
     @objc func handleDone() {
         let hudView = HudView.hud(inView: navigationController!.view, animated: true)
         hudView.text = "Tagged"
-        let delayInSeconds = 0.6
-        afterDelay(delayInSeconds) {
-            hudView.hide()
-            self.navigationController?.popViewController(animated: true)
+        let location = Location(context: managedObjectContext)
+        location.locationDescription = descriptionTextView.text
+        location.category = categoryLabelText
+        location.latitude = coordinate.latitude
+        location.longitude = coordinate.longitude
+        location.date = date
+        location.placemark = placemark
+        do {
+            try managedObjectContext.save()
+            afterDelay(0.6) {
+                hudView.hide()
+                self.navigationController?.popViewController(animated: true)
+            }
+        } catch {
+            fataCoreDataError(error)
         }
+        
     }
 
     @objc func handleCancel() {

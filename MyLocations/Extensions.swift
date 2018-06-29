@@ -14,6 +14,13 @@ let applicationDocumentsDirectory: URL = {
     return paths[0]
 }()
 
+let CoreDataSaveFailedNotification = Notification.Name("CoreDataSaveFailedNotification")
+
+func fataCoreDataError(_ error: Error) {
+    print("*** Fatal error: \(error)")
+    NotificationCenter.default.post(name: CoreDataSaveFailedNotification, object: nil)
+}
+
 extension UIViewController {
 
     func string(from placemark: CLPlacemark) -> String {

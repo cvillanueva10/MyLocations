@@ -18,15 +18,42 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }()
 
     lazy var managedObjectContext: NSManagedObjectContext = self.persistentContainer.viewContext
+    
+    // MARK: - helper methods
+    
+    func listenForFataCoreDataNotifications() {
+        NotificationCenter.default.addObserver(forName: CoreDataSaveFailedNotification, object: nil, queue: OperationQueue.main) { (notification) in
+            let message = """
+        There was a fatal error in the app and it cannot continue.
+        Press OK to termiante the app. Sorry for the inconvenience.
+        """
+            let alert = UIAlertController(title: "Internal Error", message: message, preferredStyle: .alert)
+            let action = UIAlertAction(title: "OK", style: .default, handler: { (_) in
+                let exception = NSException(
+                    name: NSExceptionName.internalInconsistencyException,
+                    reason: "Fatal Core Data Error",
+                    userInfo: nil)
+                exception.raise()
+            })
+            alert.addAction(action)
+            let tabBarController = self.window?.rootViewController
+            tabBarController?.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    
+    // MARK: - life cycle
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
         let mainTabBarController = MainTabBarController()
-        mainTabBarController.managedObjectContext = managedObjectContext
+        let currentLocationController = mainTabBarController.viewControllers?.first as! CurrentLocationViewController
+        currentLocationController.managedObjectContext = managedObjectContext
         let navigationController = UINavigationController(rootViewController: mainTabBarController)
         window?.rootViewController = navigationController
-        print(applicationDocumentsDirectory) 
+        listenForFataCoreDataNotifications()
+//        print(applicationDocumentsDirectory)
         return true
     }
 

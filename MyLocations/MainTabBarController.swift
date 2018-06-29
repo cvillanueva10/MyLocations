@@ -7,11 +7,8 @@
 //
 
 import UIKit
-import CoreData
 
 class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
-
-    var managedObjectContext: NSManagedObjectContext!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,10 +19,17 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
     private func setupViewControllers() {
         let currentLocationViewController = CurrentLocationViewController()
         currentLocationViewController.tabBarItem.title = "Tag"
-        currentLocationViewController.managedObjectContext = managedObjectContext
-        viewControllers = [currentLocationViewController]
+        let locationsViewController = LocationsViewController()
+        locationsViewController.tabBarItem.title = "Locations"
+        viewControllers = [currentLocationViewController, locationsViewController]
     }
-
-  
-
+    
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        if viewController.isKind(of: LocationsViewController.self){
+            navigationItem.title = "Locations"
+        }
+    }
+    
+    
 }
+
