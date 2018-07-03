@@ -10,129 +10,152 @@ import UIKit
 import CoreData
 import CoreLocation
 
-class LocationCell: UITableViewCell {
-
-    let descriptionLabel: UILabel = {
-        let label = UILabel()
-        label.font = .preferredFont(forTextStyle: .title3)
-        return label
-    }()
-
-    let addressLabel: UILabel = {
-        let label = UILabel()
-        label.font = .preferredFont(forTextStyle: .caption1)
-        return label
-    }()
-
-    let fullStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.spacing = 5
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
-
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
-    }
-
-    // TODO: - fix cell configuration
-
-    func configure(for location: Location) {
-        fullStackView.addArrangedSubview(descriptionLabel)
-        fullStackView.addArrangedSubview(addressLabel)
-        addSubview(fullStackView)
-        fullStackView.frame = frame
-        let insets = UIEdgeInsetsMake(5, 5, 5, 0)
-        fullStackView.frame = UIEdgeInsetsInsetRect(fullStackView.frame, insets)
-
-
-        descriptionLabel.text = location.locationDescription
-
-        if let placemark = location.placemark {
-            var text = ""
-            if let s = placemark.subThoroughfare {
-                text += s + " "
-            }
-            if let s = placemark.thoroughfare {
-                text += s + " "
-            }
-            if let s = placemark.locality {
-                text += s + " "
-            }
-            addressLabel.text = text
-        } else {
-            addressLabel.text = String(format: "Lat: %.8f, Long: %.8f", location.latitude, location.longitude)
-        }
-
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
 class LocationsViewController: UITableViewController {
 
 
     private let locationCellId = "locationCellId"
-    var locations = [Location]()
-    var managedObjectContext: NSManagedObjectContext!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        tableView.register(LocationCell.self, forCellReuseIdentifier: locationCellId)
+    lazy var fetchedResultsController: NSFetchedResultsController<Location> = {
         let fetchRequest = NSFetchRequest<Location>()
         let entity = Location.entity()
         fetchRequest.entity = entity
-
-        let sortDescriptor = NSSortDescriptor(key: "date", ascending: true)
-        fetchRequest.sortDescriptors = [sortDescriptor]
-
+        let sort1 = NSSortDescriptor(key: "category", ascending: true)
+        let sort2 = NSSortDescriptor(key: "date", ascending: true)
+        fetchRequest.sortDescriptors = [sort1, sort2]
+        fetchRequest.fetchBatchSize = 20
+        let fetchedResultsController = NSFetchedResultsController(
+            fetchRequest: fetchRequest,
+            managedObjectContext: self.managedObjectContext,
+            sectionNameKeyPath: "category",
+            cacheName: "Locations"
+        )
+        fetchedResultsController.delegate = self
+        return fetchedResultsController
+    }()
+    
+    
+    var managedObjectContext: NSManagedObjectContext!
+    
+    // MARK: - lifecycle
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        navigationItem.title = "Location"
+        tableView.register(LocationCell.self, forCellReuseIdentifier: locationCellId)
+        performFetch()
+    }
+    
+    deinit {
+        fetchedResultsController.delegate = nil
+    }
+    
+    // MARK: - private methods
+    
+    private func performFetch() {
         do {
-            locations = try managedObjectContext.fetch(fetchRequest)
+            try fetchedResultsController.performFetch()
         } catch {
             fatalCoreDataError(error)
         }
     }
-
-    func configureContent(for cell: UITableViewCell, at indexPath: IndexPath) {
-        let location = locations[indexPath.row]
-
-//        cell.textLabel?.font = .preferredFont(forTextStyle: .title3)
-//        cell.detailTextLabel?.font = .preferredFont(forTextStyle: .body)
-//        cell.detailTextLabel?.textColor = UIColor.init(white: 0, alpha: 0.5)
-//        cell.textLabel?.text = location.locationDescription
-//        if let placemark = location.placemark {
-//            var text = ""
-//            if let s = placemark.subThoroughfare {
-//                text += s + " "
-//            }
-//            if let s = placemark.thoroughfare {
-//                text += s + " "
-//            }
-//            if let s = placemark.locality {
-//                text += s + " "
-//            }
-//            cell.detailTextLabel?.text = text
-//        } else {
-//            cell.detailTextLabel?.text = ""
-//        }
+    
+    // MARK: - table view methods
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return fetchedResultsController.sections?.count ?? 1
     }
-
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        guard let sectionInfo = fetchedResultsController.sections else { return ""}
+        return sectionInfo[section].name
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let locationDetailsViewController = LocationDetailsViewController(style: .grouped)
+        locationDetailsViewController.managedObjectContext = managedObjectContext
+        let location = fetchedResultsController.object(at: indexPath)
+        locationDetailsViewController.locationToEdit = location
+        navigationController?.pushViewController(locationDetailsViewController, animated: true)
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let location = fetchedResultsController.object(at: indexPath)
+            managedObjectContext.delete(location)
+            do {
+                try managedObjectContext.save()
+            } catch {
+                fatalCoreDataError(error)
+            }
+        }
+    }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: locationCellId, for: indexPath) as! LocationCell
-        let location = locations[indexPath.row]
+        let location = fetchedResultsController.object(at: indexPath)
         cell.configure(for: location)
-//        configureContent(for: cell, at: indexPath)
         return cell
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return locations.count
+        guard let sectionInfo = fetchedResultsController.sections else { return 1}
+        return sectionInfo[section].numberOfObjects
     }
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 57
     }
 }
+
+extension LocationsViewController : NSFetchedResultsControllerDelegate {
+    
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        print("*** controllerWillChangeContent")
+        tableView.beginUpdates()
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+      //  guard let newIndexPath = newIndexPath, let indexPath = indexPath else { return }
+        switch type {
+        case .insert:
+            print("*** NSFetchedResultsChangeInsert (object)")
+            tableView.insertRows(at: [newIndexPath!], with: .fade)
+        case .delete:
+            print("*** NSFetchedResultsChangeDelete (object)")
+            tableView.deleteRows(at: [indexPath!], with: .fade)
+        case .update:
+            print("*** NSFetchedResultsChangeUpdate (object)")
+            if let cell = tableView.cellForRow(at: indexPath!) as? LocationCell {
+                let location = controller.object(at: indexPath!) as! Location
+                cell.configure(for: location)
+            }
+        case .move:
+            print("*** NSFetchedResultsChangeMove (object)")
+            tableView.deleteRows(at: [indexPath!], with: .fade)
+            tableView.insertRows(at: [newIndexPath!], with: .fade)
+        }
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+        switch type {
+        case .insert:
+            print("*** NSFetchedResultsChangeInsert (object)")
+            tableView.insertSections(IndexSet(integer: sectionIndex), with: .fade)
+        case .delete:
+            print("*** NSFetchedResultsChangeDelete (object)")
+            tableView.deleteSections(IndexSet(integer: sectionIndex), with: .fade)
+        case .update:
+            print("*** NSFetchedResultsChangeUpdate (object)")
+        case .move:
+            print("*** NSFetchedResultsChangeMove (object)")
+        }
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        print("*** controllerDidChangeContent")
+        tableView.endUpdates()
+    }
+}
+
+
+
+

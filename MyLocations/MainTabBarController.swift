@@ -20,13 +20,19 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         let currentLocationViewController = CurrentLocationViewController()
         currentLocationViewController.tabBarItem.title = "Tag"
         let locationsViewController = LocationsViewController()
-        locationsViewController.tabBarItem.title = "Locations"
+        locationsViewController.navigationItem.rightBarButtonItem = editButtonItem
+       // locationsViewController.title = "Locations"
         viewControllers = [currentLocationViewController, locationsViewController]
+        tabBarController?.viewControllers = viewControllers?.map() {
+            UINavigationController(rootViewController: $0)
+        }
+        navigationController?.isNavigationBarHidden = true
     }
     
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
         if viewController.isKind(of: LocationsViewController.self){
-            navigationItem.title = "Locations"
+        //    navigationItem.title = "Locations"
+       //     navigationItem.rightBarButtonItem = editButtonItem
         }
     }
     

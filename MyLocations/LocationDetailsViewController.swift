@@ -63,13 +63,23 @@ class LocationDetailsViewController: UITableViewController {
     var coordinate = CLLocationCoordinate2DMake(0, 0)
     var placemark: CLPlacemark?
     var date = Date()
-
     var managedObjectContext: NSManagedObjectContext!
+    var locationToEdit: Location? {
+        didSet {
+            if let location = locationToEdit {
+                descriptionTextView.text = location.locationDescription
+                categoryLabelText = location.category
+                date = location.date
+                coordinate = CLLocationCoordinate2DMake(location.latitude, location.longitude)
+                placemark = location.placemark
+            }
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+      
         setupUI()
-        descriptionTextView.text = ""
         latitudeText = String(format: "%.8f", coordinate.latitude)
         longitudeText = String(format: "%.8f", coordinate.longitude)
         if let placemark = placemark {
@@ -98,8 +108,14 @@ class LocationDetailsViewController: UITableViewController {
 
     @objc func handleDone() {
         let hudView = HudView.hud(inView: navigationController!.view, animated: true)
-        hudView.text = "Tagged"
-        let location = Location(context: managedObjectContext)
+        let location: Location
+        if let temp = locationToEdit {
+            hudView.text = "Updated"
+            location = temp
+        } else {
+            hudView.text = "Tagged"
+            location =  Location(context: managedObjectContext)
+        }
         location.locationDescription = descriptionTextView.text
         location.category = categoryLabelText
         location.latitude = coordinate.latitude
@@ -115,7 +131,6 @@ class LocationDetailsViewController: UITableViewController {
         } catch {
             fatalCoreDataError(error)
         }
-        
     }
 
     @objc func handleCancel() {
@@ -123,7 +138,12 @@ class LocationDetailsViewController: UITableViewController {
     }
 
     func setupUI() {
-        navigationItem.title = "Tag Location"
+        if let locationToEdit = locationToEdit {
+            navigationItem.title = "Edit Location"
+        } else {
+            navigationItem.title = "Tag Location"
+            descriptionTextView.text = ""
+        }
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(handleDone))
         descriptionViewCell.addSubview(descriptionTextView)
