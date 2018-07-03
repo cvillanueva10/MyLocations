@@ -113,7 +113,7 @@ class LocationDetailsViewController: UITableViewController {
                 self.navigationController?.popViewController(animated: true)
             }
         } catch {
-            fataCoreDataError(error)
+            fatalCoreDataError(error)
         }
         
     }

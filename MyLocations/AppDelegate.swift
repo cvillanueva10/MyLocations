@@ -48,8 +48,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
         let mainTabBarController = MainTabBarController()
-        let currentLocationController = mainTabBarController.viewControllers?.first as! CurrentLocationViewController
-        currentLocationController.managedObjectContext = managedObjectContext
+        let currentLocationViewController = mainTabBarController.viewControllers?.first as! CurrentLocationViewController
+        currentLocationViewController.managedObjectContext = managedObjectContext
+        let locationsViewController = mainTabBarController.viewControllers![1] as! LocationsViewController
+        locationsViewController.managedObjectContext = managedObjectContext
         let navigationController = UINavigationController(rootViewController: mainTabBarController)
         window?.rootViewController = navigationController
         listenForFataCoreDataNotifications()

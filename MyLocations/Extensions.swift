@@ -16,7 +16,7 @@ let applicationDocumentsDirectory: URL = {
 
 let CoreDataSaveFailedNotification = Notification.Name("CoreDataSaveFailedNotification")
 
-func fataCoreDataError(_ error: Error) {
+func fatalCoreDataError(_ error: Error) {
     print("*** Fatal error: \(error)")
     NotificationCenter.default.post(name: CoreDataSaveFailedNotification, object: nil)
 }
