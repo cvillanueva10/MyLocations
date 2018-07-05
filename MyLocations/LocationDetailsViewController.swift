@@ -138,7 +138,7 @@ class LocationDetailsViewController: UITableViewController {
     }
 
     func setupUI() {
-        if let locationToEdit = locationToEdit {
+        if locationToEdit != nil {
             navigationItem.title = "Edit Location"
         } else {
             navigationItem.title = "Tag Location"

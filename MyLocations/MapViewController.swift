@@ -71,7 +71,6 @@ class MapViewController: UIViewController {
         let entity = Location.entity()
         let fetchRequest = NSFetchRequest<Location>()
         fetchRequest.entity = entity
-        
         do {
             locations = try managedObjectContext.fetch(fetchRequest)
         } catch {
@@ -86,7 +85,6 @@ class MapViewController: UIViewController {
     @objc func showLocationDetails(_ sender: UIButton) {
         let locationDetailsViewController = LocationDetailsViewController(style: .grouped)
         locationDetailsViewController.managedObjectContext = managedObjectContext
-       // let button = sender as! UIButton
         let location = locations[sender.tag]
         locationDetailsViewController.locationToEdit = location
         navigationController?.pushViewController(locationDetailsViewController, animated: true)
@@ -134,7 +132,6 @@ extension MapViewController: MKMapViewDelegate {
             pinView.rightCalloutAccessoryView = rightButton
             annotationView = pinView
         }
-        
         if let annotationView = annotationView {
             annotationView.annotation = annotation
             let button = annotationView.rightCalloutAccessoryView as! UIButton

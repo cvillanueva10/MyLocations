@@ -44,7 +44,6 @@ class LocationCell: UITableViewCell {
         fullStackView.leadingAnchor.constraint(equalTo: readableContentGuide.leadingAnchor).isActive = true
         fullStackView.trailingAnchor.constraint(equalTo: readableContentGuide.trailingAnchor).isActive = true
         fullStackView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -5).isActive = true
-        
         if let description = location.locationDescription, description.isEmpty{
             descriptionLabel.text = "(No Description)"
         } else {
