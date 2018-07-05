@@ -10,13 +10,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MyLocations/LocationDetailsViewController.swift"
-            timestampString = "552287875.975898"
+            timestampString = "552417462.23276"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "68"
             endingLineNumber = "68"
-            landmarkName = "LocationDetailsViewController"
-            landmarkType = "3">
+            landmarkName = "locationToEdit"
+            landmarkType = "24">
             <Locations>
                <Location
                   shouldBeEnabled = "No"
