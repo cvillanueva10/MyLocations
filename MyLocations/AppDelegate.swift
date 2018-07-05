@@ -52,8 +52,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         currentLocationViewController.managedObjectContext = managedObjectContext
         let locationsViewController = mainTabBarController.viewControllers![1] as! LocationsViewController
         locationsViewController.managedObjectContext = managedObjectContext
-        let navigationController = UINavigationController(rootViewController: mainTabBarController)
-        window?.rootViewController = navigationController
+        let navMapViewController = mainTabBarController.viewControllers![2].childViewControllers[0] as! MapViewController
+        navMapViewController.managedObjectContext = managedObjectContext
+   //     let navigationController = UINavigationController(rootViewController: mainTabBarController)
+        window?.rootViewController = mainTabBarController
         listenForFataCoreDataNotifications()
 //        print(applicationDocumentsDirectory)
         return true

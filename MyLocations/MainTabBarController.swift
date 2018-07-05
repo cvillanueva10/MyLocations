@@ -17,12 +17,17 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
     }
     
     private func setupViewControllers() {
+        view.backgroundColor = .white
         let currentLocationViewController = CurrentLocationViewController()
         currentLocationViewController.tabBarItem.title = "Tag"
         let locationsViewController = LocationsViewController()
         locationsViewController.navigationItem.rightBarButtonItem = editButtonItem
-       // locationsViewController.title = "Locations"
-        viewControllers = [currentLocationViewController, locationsViewController]
+        locationsViewController.tabBarItem.title = "Locations"
+        
+        let mapViewController = MapViewController()
+        let navMapViewController = UINavigationController(rootViewController: mapViewController)
+        navMapViewController.tabBarItem.title = "Map"
+        viewControllers = [currentLocationViewController, locationsViewController, navMapViewController]
         tabBarController?.viewControllers = viewControllers?.map() {
             UINavigationController(rootViewController: $0)
         }
