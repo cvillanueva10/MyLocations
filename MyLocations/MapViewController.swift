@@ -20,7 +20,15 @@ class MapViewController: UIViewController {
     }()
     
     var locations = [Location]()
-    var managedObjectContext: NSManagedObjectContext!
+    var managedObjectContext: NSManagedObjectContext! {
+        didSet {
+            NotificationCenter.default.addObserver(forName: Notification.Name.NSManagedObjectContextObjectsDidChange, object: managedObjectContext, queue: OperationQueue.main) { (_) in
+                if self.isViewLoaded {
+                    self.updateLocations()
+                }
+            }
+        }
+    }
     
     
     override func viewDidLoad() {
@@ -73,6 +81,17 @@ class MapViewController: UIViewController {
 
     }
     
+    // MAKR: - actions
+    
+    @objc func showLocationDetails(_ sender: UIButton) {
+        let locationDetailsViewController = LocationDetailsViewController(style: .grouped)
+        locationDetailsViewController.managedObjectContext = managedObjectContext
+       // let button = sender as! UIButton
+        let location = locations[sender.tag]
+        locationDetailsViewController.locationToEdit = location
+        navigationController?.pushViewController(locationDetailsViewController, animated: true)
+    }
+    
     @objc func showLocations() {
         let theRegion = region(for: locations)
         mapView.setRegion(theRegion, animated: true)
@@ -92,6 +111,7 @@ class MapViewController: UIViewController {
         mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        mapView.delegate = self
     }
 }
 
@@ -101,10 +121,29 @@ extension MapViewController: MKMapViewDelegate {
         guard annotation is Location else {
             return nil
         }
+        let identifier = "Location"
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+        if annotationView == nil {
+            let pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            pinView.isEnabled = true
+            pinView.canShowCallout = true
+            pinView.animatesDrop = false
+            pinView.pinTintColor = UIColor(red: 0.32, green: 0.82, blue: 0.4, alpha: 1)
+            let rightButton = UIButton(type: .detailDisclosure)
+            rightButton.addTarget(self, action: #selector(showLocationDetails), for: .touchUpInside)
+            pinView.rightCalloutAccessoryView = rightButton
+            annotationView = pinView
+        }
+        
+        if let annotationView = annotationView {
+            annotationView.annotation = annotation
+            let button = annotationView.rightCalloutAccessoryView as! UIButton
+            if let index = locations.index(of: annotation as! Location) {
+                button.tag = index
+            }
+        }
+        return annotationView
     }
-    
-    
-    
 }
 
 
