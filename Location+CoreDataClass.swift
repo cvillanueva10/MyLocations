@@ -8,9 +8,26 @@
 //
 
 import Foundation
-import CoreData 
+import CoreData
+import MapKit
 
 @objc(Location)
-public class Location: NSManagedObject {
+public class Location: NSManagedObject, MKAnnotation {
+    
+    public var coordinate: CLLocationCoordinate2D {
+        return CLLocationCoordinate2DMake(latitude, longitude)
+    }
+    
+    public var title: String? {
+        if locationDescription?.isEmpty ?? false {
+            return "(No Description)"
+        } else {
+            return locationDescription
+        }
+    }
+    
+    public var subtitle: String? {
+        return category
+    }
 
 }
