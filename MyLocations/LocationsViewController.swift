@@ -40,7 +40,8 @@ class LocationsViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "Location"
+        navigationItem.title = "Locations"
+       // navigationItem.rightBarButtonItem = editButtonItem
         tableView.register(LocationCell.self, forCellReuseIdentifier: locationCellId)
         performFetch()
     }
@@ -89,6 +90,8 @@ class LocationsViewController: UITableViewController {
             }
         }
     }
+
+
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: locationCellId, for: indexPath) as! LocationCell

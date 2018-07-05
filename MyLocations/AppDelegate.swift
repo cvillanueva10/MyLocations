@@ -49,8 +49,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.makeKeyAndVisible()
         let mainTabBarController = MainTabBarController()
         let currentLocationViewController = mainTabBarController.viewControllers?.first as! CurrentLocationViewController
+        let locationsViewController = mainTabBarController.viewControllers![1].childViewControllers[0] as! LocationsViewController
         currentLocationViewController.managedObjectContext = managedObjectContext
-        let locationsViewController = mainTabBarController.viewControllers![1] as! LocationsViewController
         locationsViewController.managedObjectContext = managedObjectContext
         let navMapViewController = mainTabBarController.viewControllers![2].childViewControllers[0] as! MapViewController
         navMapViewController.managedObjectContext = managedObjectContext
