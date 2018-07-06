@@ -222,7 +222,10 @@ class LocationDetailsViewController: UITableViewController {
             categoryPickerViewController.selectedCategoryName = categoryLabelText
             categoryPickerViewController.delegate = self
             navigationController?.pushViewController(categoryPickerViewController, animated: true)
-        } 
+        } else if indexPath.section == 1 && indexPath.row == 0 {
+            tableView.deselectRow(at: indexPath, animated: true)
+            pickPhoto()
+        }
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -263,11 +266,63 @@ class LocationDetailsViewController: UITableViewController {
 }
 
 extension LocationDetailsViewController: CategoryPickerViewControllerDelegate {
+
     func didSetCategoryName(with categoryName: String) {
         categoryLabelText = categoryName
         tableView.reloadData()
     }
-    
+}
+
+extension LocationDetailsViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
+    func pickPhoto() {
+        if true || UIImagePickerController.isSourceTypeAvailable(.camera) {
+            showPhotoMenu()
+        } else {
+            choosePhotoFromLibrary()
+        }
+    }
+
+    func showPhotoMenu() {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let photoAction = UIAlertAction(title: "Take Photo", style: .default, handler: { _ in
+            self.takePhotoWithCamera()
+        })
+        let libraryAction = UIAlertAction(title: "Choose from Library", style: .default, handler: { _ in
+            self.choosePhotoFromLibrary()
+        })
+        alert.addAction(cancelAction)
+        alert.addAction(photoAction)
+        alert.addAction(libraryAction)
+        present(alert, animated: true, completion: nil)
+    }
+
+    func takePhotoWithCamera() {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.sourceType = .camera
+        imagePickerController.delegate = self
+        imagePickerController.allowsEditing = true
+        present(imagePickerController, animated: true, completion: nil)
+    }
+
+    func choosePhotoFromLibrary() {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.sourceType = .photoLibrary
+        imagePickerController.delegate = self
+        imagePickerController.allowsEditing = true
+        present(imagePickerController, animated: true, completion: nil)
+    }
+
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        dismiss(animated: true, completion: nil)
+    }
+
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
+    }
+
+
 }
 
 
