@@ -2,6 +2,27 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:MyLocations.xcodeproj">
+      location = "group:/Users/christophervillanueva/Documents/GitHub/MyLocations/AppDelegate.swift">
+   </FileRef>
+   <FileRef
+      location = "group:/Users/christophervillanueva/Documents/GitHub/MyLocations/MyLocations/CategoryPickerViewController.swift">
+   </FileRef>
+   <FileRef
+      location = "group:/Users/christophervillanueva/Documents/GitHub/MyLocations/MyLocations/CurrentLocationViewController.swift">
+   </FileRef>
+   <FileRef
+      location = "group:/Users/christophervillanueva/Documents/GitHub/MyLocations/Extensions.swift">
+   </FileRef>
+   <FileRef
+      location = "group:../MyLocations/HudView.swift">
+   </FileRef>
+   <FileRef
+      location = "group:../MyLocations/Info.plist">
+   </FileRef>
+   <FileRef
+      location = "group:/Users/christophervillanueva/Documents/GitHub/MyLocations/MyLocations/MapViewController.swift">
+   </FileRef>
+   <FileRef
+      location = "self:">
    </FileRef>
 </Workspace>

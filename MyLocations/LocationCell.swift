@@ -21,10 +21,25 @@ class LocationCell: UITableViewCell {
         label.font = .preferredFont(forTextStyle: .caption1)
         return label
     }()
+
+    let thumbnailImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .center
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
     
-    let fullStackView: UIStackView = {
+    let verticalStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
+        stackView.spacing = 5
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+
+    let horizontalStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
         stackView.spacing = 5
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -37,13 +52,25 @@ class LocationCell: UITableViewCell {
     // TODO: - fix cell configuration
     
     func configure(for location: Location) {
-        fullStackView.addArrangedSubview(descriptionLabel)
-        fullStackView.addArrangedSubview(addressLabel)
-        addSubview(fullStackView)
-        fullStackView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 5).isActive = true
-        fullStackView.leadingAnchor.constraint(equalTo: readableContentGuide.leadingAnchor).isActive = true
-        fullStackView.trailingAnchor.constraint(equalTo: readableContentGuide.trailingAnchor).isActive = true
-        fullStackView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -5).isActive = true
+        backgroundColor = .white
+        verticalStackView.addArrangedSubview(descriptionLabel)
+        verticalStackView.addArrangedSubview(addressLabel)
+        let thumbnailWidth: CGFloat = 52
+        let thumbnailHeight: CGFloat = 52
+        thumbnailImageView.widthAnchor.constraint(equalToConstant: thumbnailWidth).isActive = true
+        thumbnailImageView.heightAnchor.constraint(equalToConstant: thumbnailHeight).isActive = true
+        horizontalStackView.addArrangedSubview(thumbnailImageView)
+        horizontalStackView.addArrangedSubview(verticalStackView)
+        addSubview(horizontalStackView)
+        horizontalStackView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 5).isActive = true
+        horizontalStackView.leadingAnchor.constraint(equalTo: readableContentGuide.leadingAnchor).isActive = true
+        horizontalStackView.trailingAnchor.constraint(equalTo: readableContentGuide.trailingAnchor).isActive = true
+        horizontalStackView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -5).isActive = true
+
+        if location.hasPhoto, let image = location.photoImage {
+            thumbnailImageView.image = image.resized(withBounds: CGSize(width: 52, height: 52))
+        }
+
         if let description = location.locationDescription, description.isEmpty{
             descriptionLabel.text = "(No Description)"
         } else {
