@@ -336,6 +336,7 @@ extension LocationDetailsViewController: UIImagePickerControllerDelegate, UINavi
 
     func showPhotoMenu() {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alert.view.tintColor = UIAlertController().view.tintColor
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         let photoAction = UIAlertAction(title: "Take Photo", style: .default, handler: { _ in
             self.takePhotoWithCamera()
@@ -352,6 +353,7 @@ extension LocationDetailsViewController: UIImagePickerControllerDelegate, UINavi
 
     func takePhotoWithCamera() {
         let imagePickerController = UIImagePickerController()
+        imagePickerController.view.tintColor = view.tintColor
         imagePickerController.sourceType = .camera
         imagePickerController.delegate = self
         imagePickerController.allowsEditing = true

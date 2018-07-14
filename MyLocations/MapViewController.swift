@@ -14,6 +14,7 @@ class MapViewController: UIViewController {
     
     let mapView: MKMapView = {
         let view = MKMapView()
+        view.tintColor = .blue
         view.showsUserLocation = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -102,8 +103,8 @@ class MapViewController: UIViewController {
     
     func setupUI() {
         navigationItem.title = "Map"
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Locations", style: .plain, target: self, action: #selector(showLocations))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "User", style: .plain, target: self, action: #selector(showUser))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "Pin"), style: .plain, target: self, action: #selector(showLocations))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "User"), style: .plain, target: self, action: #selector(showUser))
         view.addSubview(mapView)
         mapView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
@@ -127,6 +128,7 @@ extension MapViewController: MKMapViewDelegate {
             pinView.canShowCallout = true
             pinView.animatesDrop = false
             pinView.pinTintColor = UIColor(red: 0.32, green: 0.82, blue: 0.4, alpha: 1)
+            pinView.tintColor = UIColor(white: 0, alpha: 0.5)
             let rightButton = UIButton(type: .detailDisclosure)
             rightButton.addTarget(self, action: #selector(showLocationDetails), for: .touchUpInside)
             pinView.rightCalloutAccessoryView = rightButton

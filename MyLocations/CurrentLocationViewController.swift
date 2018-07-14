@@ -8,6 +8,7 @@ class CurrentLocationViewController: UIViewController {
     let messageLabel: UILabel = {
         let label = UILabel()
         label.text = "(Message Label)"
+        label.textColor = .white
         label.font = UIFont.preferredFont(forTextStyle: .title2)
         label.numberOfLines = 0
         label.textAlignment = .center
@@ -32,6 +33,7 @@ class CurrentLocationViewController: UIViewController {
     let addressLabel: UILabel = {
         let label = UILabel()
         label.text = "(Address goes here)"
+        label.textColor = .white
         label.font = UIFont.preferredFont(forTextStyle: .body)
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -40,7 +42,13 @@ class CurrentLocationViewController: UIViewController {
     
     let tagButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Tag Button", for: .normal)
+        let attributedTitle = NSAttributedString(
+            string: "Get My Location",
+            attributes: [
+                NSAttributedStringKey.font : UIFont.boldSystemFont(ofSize: 20)
+            ]
+        )
+        button.setAttributedTitle(attributedTitle, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -56,7 +64,14 @@ class CurrentLocationViewController: UIViewController {
     
     lazy var getMyLocationButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Get My Location", for: .normal)
+        let attributedTitle = NSAttributedString(
+            string: "Get My Location",
+            attributes: [
+                NSAttributedStringKey.font : UIFont.boldSystemFont(ofSize: 20),
+                NSAttributedStringKey.foregroundColor : UIColor.white
+            ]
+        )
+        button.setAttributedTitle(attributedTitle, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -85,6 +100,7 @@ class CurrentLocationViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.isNavigationBarHidden = true
+        UIApplication.shared.statusBarStyle = .lightContent
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -150,7 +166,7 @@ class CurrentLocationViewController: UIViewController {
     }
     
     private func setupUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = .black
         view.addSubview(messageLabel)
         latitudeLabel.setText(left: "Latitude: ")
         latitudeLabel.setText(right: "(Latitude goes here)")

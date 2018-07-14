@@ -40,11 +40,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             tabBarController?.present(alert, animated: true, completion: nil)
         }
     }
+
+    func customizeAppearance() {
+        UINavigationBar.appearance().barTintColor = .black
+        UINavigationBar.appearance().titleTextAttributes = [
+            NSAttributedStringKey.foregroundColor : UIColor.white
+        ]
+        UITabBar.appearance().barTintColor = .black
+        UITabBar.appearance().tintColor = .yellowTint
+    }
     
     
     // MARK: - life cycle
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        customizeAppearance()
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
         let mainTabBarController = MainTabBarController()
@@ -55,6 +65,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let navMapViewController = mainTabBarController.viewControllers![2].childViewControllers[0] as! MapViewController
         navMapViewController.managedObjectContext = managedObjectContext
         window?.rootViewController = mainTabBarController
+        window?.tintColor = .yellowTint
         listenForFataCoreDataNotifications()
         return true
     }

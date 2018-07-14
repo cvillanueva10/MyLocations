@@ -21,6 +21,21 @@ func fatalCoreDataError(_ error: Error) {
     NotificationCenter.default.post(name: CoreDataSaveFailedNotification, object: nil)
 }
 
+extension UIColor {
+    static let yellowTint = UIColor(red: 255/255, green: 238/255, blue: 136/255, alpha: 1)
+}
+
+extension String {
+    mutating func add(text: String?, separatedBy separator: String = "") {
+        if let text = text {
+            if !isEmpty {
+                self += separator
+            }
+            self += text
+        }
+    }
+}
+
 extension UIImage {
     func resized(withBounds bounds: CGSize) -> UIImage {
         let horizontalRatio = bounds.width / size.width
@@ -35,31 +50,25 @@ extension UIImage {
     }
 }
 
-extension UIViewController {
-
-    func string(from placemark: CLPlacemark) -> String {
-        var line1 = ""
-        if let lotNumber = placemark.subThoroughfare {
-            line1 += lotNumber + " "
-        }
-        if let streetName = placemark.thoroughfare {
-            line1 += streetName + " "
-        }
-        var line2 = ""
-        if let city = placemark.locality {
-            line2 += city + " "
-        }
-        if let state = placemark.administrativeArea {
-            line2 += state + " "
-        }
-        if let zipCode = placemark.postalCode {
-            line2 += zipCode + " "
-        }
-        return line1 + "\n" + line2
+extension UIImagePickerController {
+    open override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
 }
 
 extension UIViewController {
+
+    func string(from placemark: CLPlacemark) -> String {
+        var line1 = ""
+        line1.add(text: placemark.subThoroughfare)
+        line1.add(text: placemark.thoroughfare, separatedBy: " ")
+        var line2 = ""
+        line2.add(text: placemark.locality)
+        line2.add(text: placemark.administrativeArea, separatedBy: " ")
+        line2.add(text: placemark.postalCode, separatedBy: " ")
+        line1.add(text: line2, separatedBy: "\n")
+        return line1
+    }
 
     func afterDelay(_ seconds: Double, run: @escaping () -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + seconds, execute: run)

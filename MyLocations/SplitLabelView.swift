@@ -13,6 +13,7 @@ class SplitLabelView: UILabel {
     private let leftLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
+        label.textColor = .white
         label.font = UIFont.preferredFont(forTextStyle: .title3)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -21,6 +22,7 @@ class SplitLabelView: UILabel {
     private let rightLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .right
+        label.textColor = .white
         label.font = UIFont.preferredFont(forTextStyle: .title3)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
