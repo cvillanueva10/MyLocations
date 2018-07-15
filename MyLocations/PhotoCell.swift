@@ -28,6 +28,9 @@ class PhotoCell: UITableViewCell {
     }()
 
     func setupLayout() {
+        backgroundColor = .black
+        addPhotoLabel.textColor = .white
+        addPhotoLabel.highlightedTextColor = .white
         addSubview(addPhotoLabel)
         addPhotoLabel.leftAnchor.constraint(equalTo: readableContentGuide.leftAnchor).isActive = true
         addPhotoLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.5).isActive = true

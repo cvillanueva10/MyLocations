@@ -56,6 +56,15 @@ extension UIImagePickerController {
     }
 }
 
+extension UITableViewController {
+    func configureTableView() {
+        tableView.separatorColor = UIColor(white: 1, alpha: 0.2)
+        tableView.indicatorStyle = .white
+        tableView.backgroundColor = .black
+        tableView.sectionHeaderHeight = 28
+    }
+}
+
 extension UIViewController {
 
     func string(from placemark: CLPlacemark) -> String {
@@ -73,6 +82,4 @@ extension UIViewController {
     func afterDelay(_ seconds: Double, run: @escaping () -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + seconds, execute: run)
     }
-
-
 }

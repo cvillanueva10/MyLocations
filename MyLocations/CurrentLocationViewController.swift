@@ -43,7 +43,7 @@ class CurrentLocationViewController: UIViewController {
     let tagButton: UIButton = {
         let button = UIButton(type: .system)
         let attributedTitle = NSAttributedString(
-            string: "Get My Location",
+            string: "Tag Location",
             attributes: [
                 NSAttributedStringKey.font : UIFont.boldSystemFont(ofSize: 20)
             ]

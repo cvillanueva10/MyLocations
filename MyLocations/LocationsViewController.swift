@@ -41,11 +41,11 @@ class LocationsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Locations"
-       // navigationItem.rightBarButtonItem = editButtonItem
         tableView.register(LocationCell.self, forCellReuseIdentifier: locationCellId)
+        configureTableView()
         performFetch()
     }
-    
+
     deinit {
         fetchedResultsController.delegate = nil
     }
@@ -68,7 +68,25 @@ class LocationsViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         guard let sectionInfo = fetchedResultsController.sections else { return ""}
-        return sectionInfo[section].name
+        return sectionInfo[section].name.uppercased()
+    }
+
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let labelRect = CGRect(x: 14, y: tableView.sectionHeaderHeight - 14, width: 300, height: 14)
+        let label = UILabel(frame: labelRect)
+        label.font = UIFont.preferredFont(forTextStyle: .callout)
+        label.text = tableView.dataSource?.tableView!(tableView, titleForHeaderInSection: section)
+        label.textColor = UIColor(white: 1, alpha: 0.5)
+        label.backgroundColor = .clear
+        let seperatorRect = CGRect(x: 15, y: tableView.sectionHeaderHeight - 0.5, width: tableView.bounds.size.width - 15, height: 0.5)
+        let seperatorView = UIView(frame: seperatorRect)
+        seperatorView.backgroundColor = tableView.separatorColor
+        let viewRect = CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: tableView.sectionHeaderHeight)
+        let view = UIView(frame: viewRect)
+        view.backgroundColor = UIColor(white: 0, alpha: 0.85)
+        view.addSubview(label)
+        view.addSubview(seperatorView)
+        return view
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -91,8 +109,6 @@ class LocationsViewController: UITableViewController {
             }
         }
     }
-
-
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: locationCellId, for: indexPath) as! LocationCell

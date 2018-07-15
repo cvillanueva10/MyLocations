@@ -40,6 +40,7 @@ class CategoryPickerViewController: UITableViewController {
             }
         }
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellID)
+        configureTableView()
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -48,6 +49,8 @@ class CategoryPickerViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath)
+        cell.backgroundColor = .black
+        cell.textLabel?.textColor = .white
         let categoryName = categories[indexPath.row]
         cell.textLabel?.text = categoryName
         if categoryName == selectedCategoryName {
@@ -55,6 +58,9 @@ class CategoryPickerViewController: UITableViewController {
         } else {
             cell.accessoryType = .none
         }
+        let selection = UIView(frame: CGRect.zero)
+        selection.backgroundColor = UIColor(white: 1.0, alpha: 0.2)
+        cell.selectedBackgroundView = selection
         return cell
     }
     

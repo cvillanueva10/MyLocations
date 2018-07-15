@@ -21,6 +21,8 @@ class LocationDetailsViewController: UITableViewController {
 
     var descriptionTextView: UITextView = {
         let textView = UITextView()
+        textView.backgroundColor = .black
+        textView.textColor = .white
         textView.font = .preferredFont(forTextStyle: .body)
         textView.translatesAutoresizingMaskIntoConstraints = false
         return textView
@@ -42,6 +44,7 @@ class LocationDetailsViewController: UITableViewController {
     let addressLabel: UILabel = {
         let label = UILabel()
         label.text = "Address"
+        label.textColor = .white
         label.textAlignment = .left
         label.font = .preferredFont(forTextStyle: .body)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -50,6 +53,7 @@ class LocationDetailsViewController: UITableViewController {
     let addressDetailLabel: UILabel = {
         let label = UILabel()
         label.text = "77 Beale St San Francisco CA"
+        label.textColor = UIColor(white: 1.0, alpha: 0.5)
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
         label.textAlignment = .right
@@ -84,17 +88,7 @@ class LocationDetailsViewController: UITableViewController {
         super.viewDidLoad()
       
         setupUI()
-        latitudeText = String(format: "%.8f", coordinate.latitude)
-        longitudeText = String(format: "%.8f", coordinate.longitude)
-        if let placemark = placemark {
-            addressDetailLabel.text = string(from: placemark)
-        } else {
-            addressDetailLabel.text = "No Address Found"
-        }
-        dateText = format(date: date)
-        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
-        gestureRecognizer.cancelsTouchesInView = false
-        tableView.addGestureRecognizer(gestureRecognizer)
+        configureTableView()
         listenForBackgroundNotification()
     }
 
@@ -185,6 +179,17 @@ class LocationDetailsViewController: UITableViewController {
     // MARK: - UI
 
     func setupUI() {
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        gestureRecognizer.cancelsTouchesInView = false
+        tableView.addGestureRecognizer(gestureRecognizer)
+        latitudeText = String(format: "%.8f", coordinate.latitude)
+        longitudeText = String(format: "%.8f", coordinate.longitude)
+        if let placemark = placemark {
+            addressDetailLabel.text = string(from: placemark)
+        } else {
+            addressDetailLabel.text = "No Address Found"
+        }
+        dateText = format(date: date)
         if let location = locationToEdit {
             navigationItem.title = "Edit Location"
             if location.hasPhoto {
@@ -204,6 +209,7 @@ class LocationDetailsViewController: UITableViewController {
         descriptionTextView.topAnchor.constraint(equalTo: descriptionViewCell.topAnchor, constant: 10).isActive = true
         descriptionTextView.bottomAnchor.constraint(equalTo: descriptionViewCell.bottomAnchor, constant: -10).isActive = true
         addressViewCell.addSubview(addressLabel)
+        addressViewCell.backgroundColor = .black
         addressLabel.leftAnchor.constraint(equalTo: addressViewCell.readableContentGuide.leftAnchor).isActive = true
         addressLabel.widthAnchor.constraint(equalTo: addressViewCell.widthAnchor, multiplier: 0.5).isActive = true
         addressLabel.heightAnchor.constraint(equalTo: addressViewCell.heightAnchor).isActive = true
@@ -281,7 +287,6 @@ class LocationDetailsViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = UITableViewCell(style: .value1, reuseIdentifier: "CellID")
-        cell.detailTextLabel?.textColor = .black
         switch indexPath.section {
         case 0:
             if indexPath.row == 0 {
@@ -289,6 +294,7 @@ class LocationDetailsViewController: UITableViewController {
                 cell.selectionStyle = .none
             } else if indexPath.row == 1{
                 cell.textLabel?.text = "Category"
+                cell.textLabel?.textColor = .white
                 cell.detailTextLabel?.text = categoryLabelText
                 cell.accessoryType = .disclosureIndicator
             }
@@ -297,6 +303,8 @@ class LocationDetailsViewController: UITableViewController {
             cell.accessoryType = .disclosureIndicator
         case 2:
             cell.selectionStyle = .none
+            cell.textLabel?.textColor = .white
+            cell.detailTextLabel?.textColor = UIColor(white: 1, alpha: 0.5)
             if indexPath.row == 0 {
                 cell.textLabel?.text = "Latitude"
                 cell.detailTextLabel?.text = latitudeText
@@ -312,7 +320,14 @@ class LocationDetailsViewController: UITableViewController {
         default:
             break
         }
+        cell.backgroundColor = .black
         return cell
+    }
+
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let selection = UIView(frame: CGRect.zero)
+        selection.backgroundColor = UIColor(white: 1.0, alpha: 0.2)
+        cell.selectedBackgroundView = selection
     }
 }
 
@@ -362,6 +377,7 @@ extension LocationDetailsViewController: UIImagePickerControllerDelegate, UINavi
 
     func choosePhotoFromLibrary() {
         let imagePickerController = UIImagePickerController()
+        imagePickerController.view.tintColor = view.tintColor
         imagePickerController.sourceType = .photoLibrary
         imagePickerController.delegate = self
         imagePickerController.allowsEditing = true
