@@ -2,6 +2,7 @@
 import UIKit
 import CoreLocation
 import CoreData
+import AudioToolbox
 
 class CurrentLocationViewController: UIViewController {
     
@@ -75,6 +76,17 @@ class CurrentLocationViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+
+    lazy var logoButton: UIButton = { [unowned self] in
+        let button = UIButton(type: .custom)
+        button.setBackgroundImage(UIImage(named: "Logo"), for: .normal)
+        button.sizeToFit()
+        button.addTarget(self, action: #selector(getLocation), for: .touchUpInside)
+//        button.center.x = self.view.bounds.midX
+//        button.center.y = 220
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
     
     let locationManager = CLLocationManager()
     var location: CLLocation?
@@ -87,6 +99,8 @@ class CurrentLocationViewController: UIViewController {
     var timer: Timer?
     var distance = CLLocationDistance(Double.greatestFiniteMagnitude)
     var managedObjectContext: NSManagedObjectContext!
+    var isLogoVisible = false
+    var soundID: SystemSoundID = 0
     
     // MARK: - lifecycle
     
@@ -94,6 +108,7 @@ class CurrentLocationViewController: UIViewController {
         super.viewDidLoad()
         getMyLocationButton.addTarget(self, action: #selector(getLocation), for: .touchUpInside)
         tagButton.addTarget(self, action: #selector(showTagLocation), for: .touchUpInside)
+        loadSoundEffect("Sound.caf")
         setupUI()
         updateLabels()
     }
@@ -117,11 +132,42 @@ class CurrentLocationViewController: UIViewController {
 
     // MARK: - UI methods
 
+    func showLogoView() {
+        if !isLogoVisible {
+            isLogoVisible = true
+            entireStackView.alpha = 0
+            view.addSubview(logoButton)
+            logoButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 25).isActive = true
+            logoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        }
+    }
+
+    func hideLogoView() {
+        if !isLogoVisible { return }
+        isLogoVisible = false
+        UIView.animate(withDuration: 0.75, delay: 0, options: .curveEaseOut, animations: {
+            self.entireStackView.alpha = 1
+            self.logoButton.alpha = 0
+        }, completion: nil)
+    }
+
     func configureGetButton() {
+        let spinnerTag = 1000
         if updatingLocation {
             getMyLocationButton.setTitle("Stop", for: .normal)
+            if view.viewWithTag(spinnerTag) == nil {
+                let spinner = UIActivityIndicatorView(activityIndicatorStyle: .white)
+                spinner.center = messageLabel.center
+                spinner.center.y += spinner.bounds.size.height / 2 + 15
+                spinner.startAnimating()
+                spinner.tag = spinnerTag
+                entireStackView.addArrangedSubview(spinner)
+            }
         } else {
             getMyLocationButton.setTitle("Get My Location", for: .normal)
+            if let spinner = view.viewWithTag(spinnerTag) {
+                spinner.removeFromSuperview()
+            }
         }
     }
     
@@ -129,6 +175,8 @@ class CurrentLocationViewController: UIViewController {
         if let location = location {
             let latitudeText = String(format: "%.8f", location.coordinate.latitude)
             let longitudeText = String(format: "%.8f", location.coordinate.longitude)
+            latitudeLabel.isHidden = false
+            longitudeLabel.isHidden = false
             latitudeLabel.setText(right: latitudeText)
             longitudeLabel.setText(right: longitudeText)
             tagButton.isHidden = false
@@ -143,6 +191,8 @@ class CurrentLocationViewController: UIViewController {
                 addressLabel.text = "No Address Found"
             }
         } else {
+            latitudeLabel.isHidden = true
+            longitudeLabel.isHidden = true
             latitudeLabel.setText(right: "")
             longitudeLabel.setText(right: "")
             tagButton.isHidden = true
@@ -158,12 +208,15 @@ class CurrentLocationViewController: UIViewController {
             } else if updatingLocation {
                 statusMessage = "Searching..."
             } else {
-                statusMessage = "Tap 'Get My Location' to Start"
+                statusMessage = ""
+                showLogoView()
             }
             messageLabel.text = statusMessage
         }
         configureGetButton()
     }
+
+    // FIXME: - FIX AUTO LAYOUTTTTTTTTTT
     
     private func setupUI() {
         view.backgroundColor = .black
@@ -185,6 +238,26 @@ class CurrentLocationViewController: UIViewController {
         getMyLocationButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -35).isActive = true
         getMyLocationButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
     }
+
+    // MARK: - sound effects
+    func loadSoundEffect(_ name: String) {
+        if let path = Bundle.main.path(forResource: name, ofType: nil){
+            let fileURL = URL(fileURLWithPath: path, isDirectory: false)
+            let error = AudioServicesCreateSystemSoundID(fileURL as CFURL, &soundID)
+            if error != kAudioServicesNoError {
+                print("Error code: \(error) loading sound: \(path)")
+            }
+        }
+    }
+
+    func unloadSoundEffect() {
+        AudioServicesDisposeSystemSoundID(soundID)
+        soundID = 0
+    }
+
+    func playSoundEffect() {
+        AudioServicesPlayAlertSound(soundID)
+    }
 }
 
 // MARK: - core location
@@ -192,7 +265,6 @@ class CurrentLocationViewController: UIViewController {
 extension CurrentLocationViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let newLocation = locations.last {
-            print("didUpdateLocations \(newLocation)")
             if newLocation.timestamp.timeIntervalSinceNow < -5 {
                 return
             }
@@ -226,6 +298,9 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
         geocoder.reverseGeocodeLocation(newLocation) { (placemarks, error) in
             self.lastGeocodingError = error
             if error == nil, let p = placemarks, !p.isEmpty {
+                if self.placemark == nil {
+                    self.playSoundEffect()
+                }
                 self.placemark = p.last
             } else {
                 self.placemark = nil
@@ -266,6 +341,9 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
         if authStatus == .denied || authStatus == .restricted {
             showLocationServicesDeniedAlert()
             return
+        }
+        if isLogoVisible {
+            hideLogoView()
         }
         if updatingLocation {
             stopLocationManager()
@@ -315,6 +393,19 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
         let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
         alert.addAction(okAction)
         present(alert, animated: true, completion: nil)
+    }
+}
+
+// MARK: - core animation
+extension CurrentLocationViewController : CAAnimationDelegate {
+    func animationDidStop(_ anim: CAAnimation,
+                             finished flag: Bool) {
+        entireStackView.layer.removeAllAnimations()
+        entireStackView.center.x = view.bounds.size.width / 2
+        entireStackView.center.y = 40 +
+            entireStackView.bounds.size.height / 2
+        logoButton.layer.removeAllAnimations()
+        logoButton.removeFromSuperview()
     }
 }
 

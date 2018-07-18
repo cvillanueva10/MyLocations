@@ -18,10 +18,10 @@
 		5685F64520E52BF700A972A7 /* Location+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5685F64320E52BF700A972A7 /* Location+CoreDataClass.swift */; };
 		5685F64620E52BF700A972A7 /* Location+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5685F64420E52BF700A972A7 /* Location+CoreDataProperties.swift */; };
 		5685F64820EF1A2A00A972A7 /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5685F64720EF1A2A00A972A7 /* PhotoCell.swift */; };
+		5696DFC220FEE6E5009DEC6D /* Sound.caf in Resources */ = {isa = PBXBuildFile; fileRef = 5696DFC120FEE6E5009DEC6D /* Sound.caf */; };
 		AC5399D520E6B25C00464AD6 /* LocationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC5399D420E6B25C00464AD6 /* LocationsViewController.swift */; };
 		AC74DADB20D97EDB0086B2A2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC74DAD920D97EDB0086B2A2 /* Main.storyboard */; };
 		AC74DADD20D97EDD0086B2A2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AC74DADC20D97EDD0086B2A2 /* Assets.xcassets */; };
-		AC74DAE020D97EDD0086B2A2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC74DADE20D97EDD0086B2A2 /* LaunchScreen.storyboard */; };
 		AC74DAE820D981690086B2A2 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC74DAE720D981690086B2A2 /* MainTabBarController.swift */; };
 		AC74DAEA20D9896F0086B2A2 /* SplitLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC74DAE920D9896F0086B2A2 /* SplitLabelView.swift */; };
 		ACC934C420EC0BD7002D68BC /* LocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC934C320EC0BD7002D68BC /* LocationCell.swift */; };
@@ -39,11 +39,11 @@
 		5685F64320E52BF700A972A7 /* Location+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Location+CoreDataClass.swift"; sourceTree = "<group>"; };
 		5685F64420E52BF700A972A7 /* Location+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Location+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		5685F64720EF1A2A00A972A7 /* PhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
+		5696DFC120FEE6E5009DEC6D /* Sound.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Sound.caf; sourceTree = SOURCE_ROOT; };
 		AC5399D420E6B25C00464AD6 /* LocationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsViewController.swift; sourceTree = "<group>"; };
 		AC74DAD220D97EDB0086B2A2 /* MyLocations.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyLocations.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC74DADA20D97EDB0086B2A2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		AC74DADC20D97EDD0086B2A2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		AC74DADF20D97EDD0086B2A2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AC74DAE120D97EDD0086B2A2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AC74DAE720D981690086B2A2 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		AC74DAE920D9896F0086B2A2 /* SplitLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitLabelView.swift; sourceTree = "<group>"; };
@@ -94,10 +94,10 @@
 				AC74DAE720D981690086B2A2 /* MainTabBarController.swift */,
 				5685F64720EF1A2A00A972A7 /* PhotoCell.swift */,
 				AC74DAE920D9896F0086B2A2 /* SplitLabelView.swift */,
+				5696DFC120FEE6E5009DEC6D /* Sound.caf */,
 				AC74DAD920D97EDB0086B2A2 /* Main.storyboard */,
 				5685F64020E49B3200A972A7 /* DataModel.xcdatamodeld */,
 				AC74DADC20D97EDD0086B2A2 /* Assets.xcassets */,
-				AC74DADE20D97EDD0086B2A2 /* LaunchScreen.storyboard */,
 				AC74DAE120D97EDD0086B2A2 /* Info.plist */,
 			);
 			path = MyLocations;
@@ -161,9 +161,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AC74DAE020D97EDD0086B2A2 /* LaunchScreen.storyboard in Resources */,
 				AC74DADD20D97EDD0086B2A2 /* Assets.xcassets in Resources */,
 				AC74DADB20D97EDB0086B2A2 /* Main.storyboard in Resources */,
+				5696DFC220FEE6E5009DEC6D /* Sound.caf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -201,14 +201,6 @@
 				AC74DADA20D97EDB0086B2A2 /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		AC74DADE20D97EDD0086B2A2 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				AC74DADF20D97EDD0086B2A2 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -332,6 +324,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = LQ2DT4KW5D;
 				INFOPLIST_FILE = MyLocations/Info.plist;
@@ -350,6 +343,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = LQ2DT4KW5D;
 				INFOPLIST_FILE = MyLocations/Info.plist;
